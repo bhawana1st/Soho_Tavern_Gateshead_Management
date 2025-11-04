@@ -1,8 +1,1 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-body {
-  font-family: "Inter", sans-serif;
-  background-color: #fffaf5;
-}
+@import "tailwindcss";
