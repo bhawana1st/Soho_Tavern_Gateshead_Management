@@ -28,7 +28,6 @@
 //   }
 // };
 
-
 import jwt from "jsonwebtoken";
 import User from "../models/userModel.js";
 
@@ -48,12 +47,13 @@ export const protect = async (req, res, next) => {
       // Get user and attach to req
       const user = await User.findById(decoded.id).select("-password");
       if (!user) {
-        return res.status(401).json({ message: "User not found, invalid token" });
+        return res
+          .status(401)
+          .json({ message: "User not found, invalid token" });
       }
 
-      req.user = { id: user._id }; // ✅ only store ID (simpler for controllers)
+      req.user = { id: user._id, role: user.role }; // ✅ only store ID (simpler for controllers)
       return next();
-
     } catch (error) {
       console.error("JWT Error:", error.message);
       return res.status(401).json({ message: "Not authorized, token invalid" });
@@ -62,6 +62,8 @@ export const protect = async (req, res, next) => {
 
   // No token case
   if (!token) {
-    return res.status(401).json({ message: "Not authorized, no token provided" });
+    return res
+      .status(401)
+      .json({ message: "Not authorized, no token provided" });
   }
 };

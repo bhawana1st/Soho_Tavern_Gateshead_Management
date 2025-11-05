@@ -5,16 +5,18 @@ import Checklist from "../models/ChecklistModel.js";
 export const saveChecklist = async (req, res, next) => {
   try {
     const payload = req.body;
-    if (!payload.date) return res.status(400).json({ message: "Date is required" });
+    if (!payload.date)
+      return res.status(400).json({ message: "Date is required" });
 
-    const filter = { date: payload.date, createdBy: req.user.id };
+    const filter = { date: payload.date };
     let doc = await Checklist.findOne(filter);
 
     if (doc) {
-      // update existing
-      doc.set(payload);
-      await doc.save();
-      return res.status(200).json({ message: "Updated", checklist: doc });
+      return res.status(400).json({
+        message:
+          "Checklist alreay present for this date, kindly delete it if you want to update!",
+        checklist: doc,
+      });
     }
 
     payload.createdBy = req.user.id;
@@ -25,10 +27,35 @@ export const saveChecklist = async (req, res, next) => {
   }
 };
 
+export const deleteChecklist = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+
+    // Allow only the creator to delete their checklist
+    const checklist = await Checklist.findOne({
+      _id: id,
+      createdBy: req.user.id,
+    });
+
+    if (!checklist) {
+      return res.status(404).json({
+        message: "Checklist not found or not authorized to delete!",
+      });
+    }
+
+    await checklist.deleteOne();
+    return res.status(200).json({ message: "Deleted successfully!" });
+  } catch (err) {
+    next(err);
+  }
+};
+
 // Get all reports for logged-in user (sorted newest first)
 export const getAllChecklists = async (req, res, next) => {
   try {
-    const reports = await Checklist.find({ createdBy: req.user.id }).sort({ date: -1 });
+    const reports = await Checklist.find().sort({
+      date: -1,
+    });
     res.json(reports);
   } catch (err) {
     next(err);
@@ -39,7 +66,7 @@ export const getAllChecklists = async (req, res, next) => {
 export const getChecklistByDate = async (req, res, next) => {
   try {
     const { date } = req.params;
-    const report = await Checklist.findOne({ date, createdBy: req.user.id });
+    const report = await Checklist.findOne({ date });
     if (!report) return res.status(404).json({ message: "Not found" });
     res.json(report);
   } catch (err) {

@@ -1,6 +1,5 @@
-import User from "../models/userModel.js";
+import User from "../models/UserModel.js";
 import jwt from "jsonwebtoken";
-import bcrypt from "bcryptjs";
 
 const generateToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -18,16 +17,16 @@ export const registerUser = async (req, res, next) => {
       return res.status(400).json({ message: "User already exists" });
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+    // Don't hash here - the User model pre-save hook will handle it
     const user = await User.create({
       name,
       email,
-      password: hashedPassword,
-      role,
+      password, // Raw password - will be hashed by pre-save hook
+      role: role || "viewer", // Default to editor if no role specified
     });
 
     res.status(201).json({
-      _id: user._id,
+      id: user._id,
       name: user.name,
       email: user.email,
       role: user.role,
@@ -48,13 +47,14 @@ export const loginUser = async (req, res, next) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    const isMatch = await bcrypt.compare(password, user.password);
+    // Use the comparePassword method from the User model
+    const isMatch = await user.comparePassword(password);
     if (!isMatch) {
       return res.status(401).json({ message: "Invalid password" });
     }
 
     res.status(200).json({
-      _id: user._id,
+      id: user._id,
       name: user.name,
       email: user.email,
       role: user.role,

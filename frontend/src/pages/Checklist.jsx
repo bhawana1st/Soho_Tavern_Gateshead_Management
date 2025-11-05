@@ -44,18 +44,16 @@ export default function Checklist() {
     setMessage("");
 
     try {
-      const token = localStorage.getItem("token");
       const response = await API.post("/checklist", checklist);
 
-      const data = response.data;
-
-      if (data) {
+      if (response.status === 200) {
         setMessage("✅ Checklist saved successfully!");
       } else {
+        console.log(data);
         setMessage(`❌ Error: ${data.message}`);
       }
     } catch (error) {
-      setMessage("❌ Failed to save checklist");
+      setMessage(error.response.data.message ?? "❌ Failed to save checklist");
     } finally {
       setLoading(false);
     }
