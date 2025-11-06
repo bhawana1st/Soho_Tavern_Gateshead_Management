@@ -1,11 +1,20 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, Navigate, useLocation, useNavigate } from "react-router-dom";
 import API from "../utils/api";
 
 export default function Login() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [form, setForm] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
+
+  const user = (() => {
+    try {
+      return JSON.parse(localStorage.getItem("user"));
+    } catch {
+      return null;
+    }
+  })();
 
   const handle = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
@@ -19,6 +28,10 @@ export default function Login() {
       setError(err.response?.data?.message || "Login failed");
     }
   };
+
+  if (user && location.pathname.startsWith("/login")) {
+    return <Navigate to={"/dashboard"} state={{ from: location }} replace />;
+  }
 
   return (
     <div className="flex items-center justify-center min-h-screen px-4 bg-cream">
