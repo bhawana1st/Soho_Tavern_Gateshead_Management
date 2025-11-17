@@ -1,8 +1,12 @@
 import { Link, useNavigate } from "react-router-dom";
+import { Menu, X } from "lucide-react";
+import { useState } from "react";
 import logo from "../assets/logo.svg";
 
 export default function Navbar() {
   const navigate = useNavigate();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
   const user = (() => {
     try {
       return JSON.parse(localStorage.getItem("user"));
@@ -13,34 +17,36 @@ export default function Navbar() {
 
   const logout = () => {
     localStorage.removeItem("user");
+    setIsMenuOpen(false);
     navigate("/login");
   };
 
+  const closeMenu = () => setIsMenuOpen(false);
+
   return (
     <nav className="fixed w-full top-0 left-0 bg-white/70 backdrop-blur-lg shadow-md z-50">
-      <div className="max-w-6xl mx-auto flex justify-between items-center px-6 py-3">
-        {/* Logo with hover enlargement */}
-        <div className="flex items-center gap-3 group">
+      <div className="max-w-6xl mx-auto flex justify-between items-center px-4 sm:px-6 py-3">
+        {/* Logo */}
+        <div className="flex items-center gap-2 sm:gap-3 group">
           <img
             src={logo}
             alt="Soho Tavern Logo"
-            className="w-10 h-10 group-hover:scale-125 transition-transform duration-300"
+            className="w-8 h-8 sm:w-10 sm:h-10 group-hover:scale-125 transition-transform duration-300"
           />
-          <span className="text-lg font-serif font-semibold text-burgundy">
-            Soho Tavern — Gateshead
+          <span className="text-sm sm:text-base lg:text-lg font-serif font-semibold text-burgundy">
+            <span className="hidden sm:inline">Soho Tavern — Gateshead</span>
+            <span className="sm:hidden">Soho Tavern</span>
           </span>
         </div>
 
-        {/* Menu */}
-        <div className="flex items-center gap-4 text-sm font-medium">
+        {/* Desktop Menu */}
+        <div className="hidden md:flex items-center gap-4 text-sm font-medium">
           {user ? (
             <>
               <Link to="/dashboard" className="hover:text-burgundy transition">
                 Dashboard
               </Link>
-              {user.role === "viewer" || user.role == "admin" ? (
-                <></>
-              ) : (
+              {user.role !== "viewer" && user.role !== "admin" && (
                 <Link
                   to="/checklist"
                   className="hover:text-burgundy transition"
@@ -48,19 +54,15 @@ export default function Navbar() {
                   Checklist
                 </Link>
               )}
-              {user.role === "admin" ? (
-                <></>
-              ) : (
+              {user.role !== "admin" && (
                 <Link to="/reports" className="hover:text-burgundy transition">
                   Reports
                 </Link>
               )}
-              {user.role === "admin" ? (
+              {user.role === "admin" && (
                 <Link to="/users" className="hover:text-burgundy transition">
                   Users
                 </Link>
-              ) : (
-                <></>
               )}
               <button
                 onClick={logout}
@@ -69,11 +71,72 @@ export default function Navbar() {
                 Logout
               </button>
             </>
-          ) : (
-            <></>
-          )}
+          ) : null}
         </div>
+
+        {/* Mobile Menu Button */}
+        {user && (
+          <button
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            className="md:hidden p-2 hover:bg-burgundy/10 rounded-lg transition"
+            aria-label="Toggle menu"
+          >
+            {isMenuOpen ? (
+              <X className="w-6 h-6 text-burgundy" />
+            ) : (
+              <Menu className="w-6 h-6 text-burgundy" />
+            )}
+          </button>
+        )}
       </div>
+
+      {/* Mobile Menu Dropdown */}
+      {user && isMenuOpen && (
+        <div className="md:hidden bg-white/95 backdrop-blur-lg shadow-lg border-t border-burgundy/10">
+          <div className="px-4 py-3 space-y-2">
+            <Link
+              to="/dashboard"
+              onClick={closeMenu}
+              className="block px-4 py-2 hover:bg-burgundy/10 rounded-lg transition text-sm font-medium"
+            >
+              Dashboard
+            </Link>
+            {user.role !== "viewer" && user.role !== "admin" && (
+              <Link
+                to="/checklist"
+                onClick={closeMenu}
+                className="block px-4 py-2 hover:bg-burgundy/10 rounded-lg transition text-sm font-medium"
+              >
+                Checklist
+              </Link>
+            )}
+            {user.role !== "admin" && (
+              <Link
+                to="/reports"
+                onClick={closeMenu}
+                className="block px-4 py-2 hover:bg-burgundy/10 rounded-lg transition text-sm font-medium"
+              >
+                Reports
+              </Link>
+            )}
+            {user.role === "admin" && (
+              <Link
+                to="/users"
+                onClick={closeMenu}
+                className="block px-4 py-2 hover:bg-burgundy/10 rounded-lg transition text-sm font-medium"
+              >
+                Users
+              </Link>
+            )}
+            <button
+              onClick={logout}
+              className="w-full text-left px-4 py-2 bg-burgundy text-white rounded-lg hover:bg-burgundy/90 transition text-sm font-medium"
+            >
+              Logout
+            </button>
+          </div>
+        </div>
+      )}
     </nav>
   );
 }
