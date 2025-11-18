@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Save, Plus, Trash2, Calendar } from "lucide-react";
+import API from "../utils/api";
 
 // Reusable Card Component
 const Card = ({ children, className = "" }) => (
@@ -553,12 +554,21 @@ export default function Checklist() {
   const handleSave = async () => {
     setLoading(true);
     setMessage("");
-
-    // Simulated save - replace with actual API call
-    setTimeout(() => {
-      setMessage("✅ Checklist saved successfully!");
+    try {
+      const response = await API.post("/checklist", checklist);
+      console.log(response);
+      if (response.status === 201) {
+        setMessage("✅ Checklist saved successfully!");
+      } else {
+        setMessage(`❌ Error: ${response.data.message}`);
+      }
+    } catch (error) {
+      setMessage(
+        error.response?.data?.message ?? "❌ Failed to save checklist"
+      );
+    } finally {
       setLoading(false);
-    }, 1000);
+    }
   };
 
   const updateDishwasherCheck = (index, field, value) => {
