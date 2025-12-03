@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   FileText,
   Download,
@@ -208,376 +208,439 @@ export default function Reports() {
       }
 
       printWindow.document.write(`
-        <!DOCTYPE html>
-        <html>
-        <head>
-          <title>Checklist - ${checklistDetail.date}</title>
-          <style>
-            * { margin: 0; padding: 0; box-sizing: border-box; }
-            body {
-              font-family: 'Inter', Arial, sans-serif;
-              background: white;
-              padding: 20px;
-              color: #2e2e2e;
-            }
-            h1, h2, h3 {
-              font-family: 'Playfair Display', Georgia, serif;
-              color: #881337;
-              margin-bottom: 12px;
-            }
-            h1 { font-size: 28px; }
-            h2 { font-size: 22px; margin-top: 20px; }
-            h3 { font-size: 18px; margin-top: 16px; }
-            .header {
-              border-bottom: 3px solid #881337;
-              padding-bottom: 16px;
-              margin-bottom: 24px;
-            }
-            .section {
-              margin-bottom: 24px;
-              page-break-inside: avoid;
-            }
-            .check-item {
-              display: flex;
-              align-items: center;
-              padding: 8px 12px;
-              background: #fef2f2;
-              border-radius: 6px;
-              margin-bottom: 8px;
-            }
-            .checkbox {
-              width: 18px;
-              height: 18px;
-              border: 2px solid #881337;
-              border-radius: 3px;
-              margin-right: 12px;
-              flex-shrink: 0;
-              display: inline-block;
-              vertical-align: middle;
-            }
-            .checkbox.checked {
-              background: #881337;
-              position: relative;
-            }
-            .checkbox.checked::after {
-              content: '✓';
-              color: white;
-              position: absolute;
-              top: -2px;
-              left: 2px;
-              font-size: 14px;
-              font-weight: bold;
-            }
-            table {
-              width: 100%;
-              border-collapse: collapse;
-              margin-top: 12px;
-              font-size: 13px;
-            }
-            th {
-              background: linear-gradient(to right, #fef2f2, #fffbeb);
-              padding: 10px;
-              text-align: left;
-              font-weight: 600;
-              border: 1px solid #fecaca;
-              color: #881337;
-            }
-            td {
-              padding: 8px 10px;
-              border: 1px solid #fecaca;
-            }
-            tr:nth-child(even) {
-              background: #fef2f2;
-            }
-            .temp-reading {
-              display: inline-block;
-              background: white;
-              padding: 6px 12px;
-              border-radius: 6px;
-              margin-right: 8px;
-              font-weight: 600;
-              border: 2px solid #fecaca;
-            }
-            .info-card {
-              background: linear-gradient(135deg, #fef2f2, #fffbeb);
-              padding: 12px;
-              border-radius: 8px;
-              margin-bottom: 12px;
-              border-left: 4px solid #881337;
-            }
-            .label {
-              font-weight: 600;
-              color: #881337;
-            }
-            @media print {
-              body { padding: 0; }
-              .section { page-break-inside: avoid; }
-            }
-          </style>
-        </head>
-        <body>
-          <div class="header">
-            <h1>Soho Tavern — Gateshead</h1>
-            <h2>Daily Checklist Report</h2>
-            <p style="color: #666; margin-top: 8px;">
-              Date: ${checklistDetail.date} | 
-              Submitted by: ${checklistDetail.name || "Unknown"} | 
-              ${new Date(checklistDetail.createdAt).toLocaleString("en-GB")}
-            </p>
-          </div>
-          
-          ${
-            checklistDetail.openingChecks?.length > 0
-              ? `
-            <div class="section">
-              <h3>Opening Checks</h3>
-              ${checklistDetail.openingChecks
-                .map(
-                  (check) => `
-                <div class="check-item">
-                  <span class="checkbox ${check.yes ? "checked" : ""}"></span>
-                  <span>${check.label || "Unnamed check"}</span>
-                </div>
-              `
-                )
-                .join("")}
-            </div>
-          `
-              : ""
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <title>Checklist - ${checklistDetail.date}</title>
+        <style>
+          * { margin: 0; padding: 0; box-sizing: border-box; }
+          body {
+            font-family: 'Inter', Arial, sans-serif;
+            background: white;
+            padding: 20px;
+            color: #2e2e2e;
           }
-          
-          ${
-            checklistDetail.fridgeTemps?.length > 0
-              ? `
-            <div class="section">
-              <h3>Fridge Temperature Monitoring</h3>
-              ${checklistDetail.fridgeTemps
-                .map(
-                  (temp) => `
-                <div class="info-card">
-                  <span class="label">${temp.time} Reading:</span>
-                  ${
-                    temp.readings
-                      ?.map((r) => `<span class="temp-reading">${r}°C</span>`)
-                      .join("") || "<em>No readings</em>"
+          h1, h2, h3 {
+            font-family: 'Playfair Display', Georgia, serif;
+            color: #881337;
+            margin-bottom: 12px;
+          }
+          h1 { font-size: 28px; }
+          h2 { font-size: 22px; margin-top: 20px; }
+          h3 { font-size: 18px; margin-top: 16px; }
+          .header {
+            border-bottom: 3px solid #881337;
+            padding-bottom: 16px;
+            margin-bottom: 24px;
+          }
+          .section {
+            margin-bottom: 24px;
+            page-break-inside: avoid;
+          }
+          .check-item {
+            display: flex;
+            align-items: center;
+            padding: 8px 12px;
+            background: #fef2f2;
+            border-radius: 6px;
+            margin-bottom: 8px;
+          }
+          .checkbox {
+            width: 18px;
+            height: 18px;
+            border: 2px solid #881337;
+            border-radius: 3px;
+            margin-right: 12px;
+            flex-shrink: 0;
+            display: inline-block;
+            vertical-align: middle;
+          }
+          .checkbox.checked {
+            background: #881337;
+            position: relative;
+          }
+          .checkbox.checked::after {
+            content: '✓';
+            color: white;
+            position: absolute;
+            top: -2px;
+            left: 2px;
+            font-size: 14px;
+            font-weight: bold;
+          }
+          table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 12px;
+            font-size: 13px;
+          }
+          th {
+            background: linear-gradient(to right, #fef2f2, #fffbeb);
+            padding: 10px;
+            text-align: left;
+            font-weight: 600;
+            border: 1px solid #fecaca;
+            color: #881337;
+          }
+          td {
+            padding: 8px 10px;
+            border: 1px solid #fecaca;
+          }
+          tr:nth-child(even) {
+            background: #fef2f2;
+          }
+          .temp-reading {
+            display: inline-block;
+            background: white;
+            padding: 6px 12px;
+            border-radius: 6px;
+            margin-right: 8px;
+            font-weight: 600;
+            border: 2px solid #fecaca;
+          }
+          .info-card {
+            background: linear-gradient(135deg, #fef2f2, #fffbeb);
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            border-left: 4px solid #881337;
+          }
+          .label {
+            font-weight: 600;
+            color: #881337;
+          }
+          .comment-box {
+            background: #fffbeb;
+            padding: 10px;
+            border-radius: 6px;
+            margin-top: 8px;
+            border-left: 3px solid #f59e0b;
+            font-style: italic;
+            color: #92400e;
+          }
+          @media print {
+            body { padding: 0; }
+            .section { page-break-inside: avoid; }
+          }
+        </style>
+      </head>
+      <body>
+        <div class="header">
+          <h1>Soho Tavern — Gateshead</h1>
+          <h2>Daily Checklist Report</h2>
+          <p style="color: #666; margin-top: 8px;">
+            Date: ${checklistDetail.date} | 
+            Submitted by: ${checklistDetail.name || "Unknown"} | 
+            ${new Date(checklistDetail.createdAt).toLocaleString("en-GB")}
+          </p>
+        </div>
+        
+        ${
+          checklistDetail.openingChecks?.length > 0
+            ? `
+          <div class="section">
+            <h3>Opening Checks</h3>
+            ${checklistDetail.openingChecks
+              .map(
+                (check) => `
+              <div class="check-item">
+                <span class="checkbox ${check.yes ? "checked" : ""}"></span>
+                <span>${check.label || "Unnamed check"}</span>
+              </div>
+            `
+              )
+              .join("")}
+            ${
+              checklistDetail.openingComment
+                ? `<div class="comment-box"><strong>Comment:</strong> ${checklistDetail.openingComment}</div>`
+                : ""
+            }
+          </div>
+        `
+            : ""
+        }
+        
+        ${
+          checklistDetail.fridgeTemps?.length > 0
+            ? `
+          <div class="section">
+            <h3>Fridge Temperature Monitoring</h3>
+            ${checklistDetail.fridgeTemps
+              .map(
+                (temp) => `
+              <div class="info-card">
+                <span class="label">${temp.time} Reading:</span>
+                ${
+                  temp.readings
+                    ?.map(
+                      (r, idx) =>
+                        `<span class="temp-reading">Fridge ${idx + 1}: ${
+                          r || "N/A"
+                        }°C</span>`
+                    )
+                    .join("") || "<em>No readings</em>"
+                }
+                ${
+                  checklistDetail.fridgeComments?.[temp.time]
+                    ? `<div class="comment-box" style="margin-top: 8px;"><strong>Comment:</strong> ${
+                        checklistDetail.fridgeComments[temp.time]
+                      }</div>`
+                    : ""
+                }
+              </div>
+            `
+              )
+              .join("")}
+          </div>
+        `
+            : ""
+        }
+        
+        ${
+          checklistDetail.deliveryDetails?.length > 0
+            ? `
+          <div class="section">
+            <h3>Delivery Details</h3>
+            <table>
+              <thead>
+                <tr>
+                  <th>Supplier</th>
+                  <th>Product</th>
+                  <th>Time</th>
+                  <th>Surface Temp</th>
+                  <th>Rejected</th>
+                  <th>Sign</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${checklistDetail.deliveryDetails
+                  .map(
+                    (del) => `
+                  <tr>
+                    <td>${del.supplier || "-"}</td>
+                    <td>${del.product || "-"}</td>
+                    <td>${del.time || "-"}</td>
+                    <td>${del.surfTemp || "-"}</td>
+                    <td>${del.rejectedIfAny || "-"}</td>
+                    <td>${del.sign || "-"}</td>
+                  </tr>
+                `
+                  )
+                  .join("")}
+              </tbody>
+            </table>
+          </div>
+        `
+            : ""
+        }
+        
+        ${
+          checklistDetail.cookingDetails?.length > 0
+            ? `
+          <div class="section">
+            <h3>Cooking & Chilling Records</h3>
+            <table>
+              <thead>
+                <tr>
+                  <th>Item Cooked</th>
+                  <th>End Cook Temp</th>
+                  <th>Time</th>
+                  <th>Chilling Method</th>
+                  <th>Duration</th>
+                  <th>End Temp</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${checklistDetail.cookingDetails
+                  .map(
+                    (cook) => `
+                  <tr>
+                    <td>${cook.itemCooked || "-"}</td>
+                    <td>${
+                      cook.endCookingTemperature
+                        ? cook.endCookingTemperature + "°C"
+                        : "-"
+                    }</td>
+                    <td>${cook.time || "-"}</td>
+                    <td>${cook.chillingMethod || "-"}</td>
+                    <td>${cook.chillingDuration || "-"}</td>
+                    <td>${
+                      cook.endTemperature ? cook.endTemperature + "°C" : "-"
+                    }</td>
+                  </tr>
+                `
+                  )
+                  .join("")}
+              </tbody>
+            </table>
+          </div>
+        `
+            : ""
+        }
+        
+        ${
+          checklistDetail.dishwasherChecks?.length > 0
+            ? `
+          <div class="section">
+            <h3>Dishwasher Checks</h3>
+            ${checklistDetail.dishwasherChecks
+              .map(
+                (check) => `
+              <div class="info-card">
+                <div style="margin-bottom: 8px;">
+                  <span class="label" style="font-size: 16px;">${
+                    check.period
+                  } Check</span>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; font-size: 13px;">
+                  <div><span class="label">Time:</span> ${
+                    check.time || "-"
+                  }</div>
+                  <div><span class="label">Temperature:</span> ${
+                    check.temp ? check.temp + "°C" : "-"
+                  }</div>
+                  <div><span class="label">Initials:</span> ${
+                    check.initial || "-"
+                  }</div>
+                  <div><span class="label">Cleansing OK:</span> ${
+                    check.cleansingOk || "-"
+                  }</div>
+                  <div><span class="label">Chemical Sufficient:</span> ${
+                    check.chemicalSufficient || "-"
+                  }</div>
+                  <div><span class="label">Closing Check:</span> ${
+                    check.closingCheck || "-"
+                  }</div>
+                </div>
+              </div>
+            `
+              )
+              .join("")}
+          </div>
+        `
+            : ""
+        }
+        
+        ${
+          checklistDetail.servedRows?.length > 0
+            ? `
+          <div class="section">
+            <h3>Cooked Dish Serving Temperature</h3>
+            <table>
+              <thead>
+                <tr>
+                  <th>Dish Name</th>
+                  <th>Lunch Temp</th>
+                  <th>Dinner Temp</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${checklistDetail.servedRows
+                  .map(
+                    (row) => `
+                  <tr>
+                    <td>${row.dish || "-"}</td>
+                    <td>${row.lunch || "-"}</td>
+                    <td>${row.dinner || "-"}</td>
+                  </tr>
+                `
+                  )
+                  .join("")}
+              </tbody>
+            </table>
+          </div>
+        `
+            : ""
+        }
+        
+        ${
+          checklistDetail.wastageReport?.length > 0
+            ? `
+          <div class="section">
+            <h3>Wastage Report</h3>
+            ${checklistDetail.wastageReport
+              .map(
+                (waste) => `
+              <div class="info-card">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 13px;">
+                  <div><span class="label">Item:</span> ${
+                    waste.itemName || "-"
+                  }</div>
+                  <div><span class="label">Session:</span> ${
+                    waste.session || "-"
+                  }</div>
+                  <div><span class="label">Reason:</span> ${
+                    waste.reason || "-"
+                  }</div>
+                  <div><span class="label">Quantity:</span> ${
+                    waste.quantity || "-"
+                  }</div>
+                  <div style="grid-column: 1 / -1;"><span class="label">Sign:</span> ${
+                    waste.sign || "-"
+                  }</div>
+                </div>
+              </div>
+            `
+              )
+              .join("")}
+          </div>
+        `
+            : ""
+        }
+        
+        ${
+          checklistDetail.incidentReport?.length > 0
+            ? `
+          <div class="section">
+            <h3>Incident Report</h3>
+            ${checklistDetail.incidentReport
+              .map(
+                (incident) => `
+              <div class="info-card" style="border-left-color: #dc2626;">
+                <div style="margin-bottom: 8px; font-size: 13px;">
+                  <span class="label">Nature:</span> ${incident.nature || "-"}
+                </div>
+                <div style="font-size: 13px;">
+                  <span class="label">Action Taken:</span> ${
+                    incident.actionTaken || "-"
                   }
                 </div>
-              `
-                )
-                .join("")}
-            </div>
-          `
-              : ""
-          }
-          
-          ${
-            checklistDetail.deliveryDetails?.length > 0
-              ? `
-            <div class="section">
-              <h3>Delivery Details</h3>
-              <table>
-                <thead>
-                  <tr>
-                    <th>Supplier</th>
-                    <th>Product</th>
-                    <th>Time</th>
-                    <th>Surface Temp</th>
-                    <th>Rejected</th>
-                    <th>Sign</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  ${checklistDetail.deliveryDetails
-                    .map(
-                      (del) => `
-                    <tr>
-                      <td>${del.supplier || "-"}</td>
-                      <td>${del.product || "-"}</td>
-                      <td>${del.time || "-"}</td>
-                      <td>${del.surfTemp || "-"}</td>
-                      <td>${del.rejectedIfAny || "-"}</td>
-                      <td>${del.sign || "-"}</td>
-                    </tr>
-                  `
-                    )
-                    .join("")}
-                </tbody>
-              </table>
-            </div>
-          `
-              : ""
-          }
-          
-          ${
-            checklistDetail.cookingDetails?.length > 0
-              ? `
-            <div class="section">
-              <h3>Cooking & Chilling Records</h3>
-              <table>
-                <thead>
-                  <tr>
-                    <th>Item Cooked</th>
-                    <th>End Cook Temp</th>
-                    <th>Time</th>
-                    <th>Chilling Method</th>
-                    <th>Duration</th>
-                    <th>End Temp</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  ${checklistDetail.cookingDetails
-                    .map(
-                      (cook) => `
-                    <tr>
-                      <td>${cook.itemCooked || "-"}</td>
-                      <td>${
-                        cook.endCookingTemperature
-                          ? cook.endCookingTemperature + "°C"
-                          : "-"
-                      }</td>
-                      <td>${cook.time || "-"}</td>
-                      <td>${cook.chillingMethod || "-"}</td>
-                      <td>${cook.chillingDuration || "-"}</td>
-                      <td>${
-                        cook.endTemperature ? cook.endTemperature + "°C" : "-"
-                      }</td>
-                    </tr>
-                  `
-                    )
-                    .join("")}
-                </tbody>
-              </table>
-            </div>
-          `
-              : ""
-          }
-          
-          ${
-            checklistDetail.dishwasherChecks?.length > 0
-              ? `
-            <div class="section">
-              <h3>Dishwasher Checks</h3>
-              ${checklistDetail.dishwasherChecks
-                .map(
-                  (check) => `
-                <div class="info-card">
-                  <div style="margin-bottom: 8px;">
-                    <span class="label" style="font-size: 16px;">${
-                      check.period
-                    } Check</span>
-                  </div>
-                  <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; font-size: 13px;">
-                    <div><span class="label">Time:</span> ${
-                      check.time || "-"
-                    }</div>
-                    <div><span class="label">Temperature:</span> ${
-                      check.temp ? check.temp + "°C" : "-"
-                    }</div>
-                    <div><span class="label">Initials:</span> ${
-                      check.initial || "-"
-                    }</div>
-                    <div><span class="label">Cleansing OK:</span> ${
-                      check.cleansingOk || "-"
-                    }</div>
-                    <div><span class="label">Chemical Sufficient:</span> ${
-                      check.chemicalSufficient || "-"
-                    }</div>
-                    <div><span class="label">Closing Check:</span> ${
-                      check.closingCheck || "-"
-                    }</div>
-                  </div>
-                </div>
-              `
-                )
-                .join("")}
-            </div>
-          `
-              : ""
-          }
-          
-          ${
-            checklistDetail.wastageReport?.length > 0
-              ? `
-            <div class="section">
-              <h3>Wastage Report</h3>
-              ${checklistDetail.wastageReport
-                .map(
-                  (waste) => `
-                <div class="info-card">
-                  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 13px;">
-                    <div><span class="label">Item:</span> ${
-                      waste.itemName || "-"
-                    }</div>
-                    <div><span class="label">Session:</span> ${
-                      waste.session || "-"
-                    }</div>
-                    <div><span class="label">Reason:</span> ${
-                      waste.reason || "-"
-                    }</div>
-                    <div><span class="label">Quantity:</span> ${
-                      waste.quantity || "-"
-                    }</div>
-                    <div style="grid-column: 1 / -1;"><span class="label">Sign:</span> ${
-                      waste.sign || "-"
-                    }</div>
-                  </div>
-                </div>
-              `
-                )
-                .join("")}
-            </div>
-          `
-              : ""
-          }
-          
-          ${
-            checklistDetail.incidentReport?.length > 0
-              ? `
-            <div class="section">
-              <h3>Incident Report</h3>
-              ${checklistDetail.incidentReport
-                .map(
-                  (incident) => `
-                <div class="info-card" style="border-left-color: #dc2626;">
-                  <div style="margin-bottom: 8px; font-size: 13px;">
-                    <span class="label">Nature:</span> ${incident.nature || "-"}
-                  </div>
-                  <div style="font-size: 13px;">
-                    <span class="label">Action Taken:</span> ${
-                      incident.actionTaken || "-"
-                    }
-                  </div>
-                </div>
-              `
-                )
-                .join("")}
-            </div>
-          `
-              : ""
-          }
-          
-          ${
-            checklistDetail.closingChecks?.length > 0
-              ? `
-            <div class="section">
-              <h3>Closing Checks</h3>
-              ${checklistDetail.closingChecks
-                .map(
-                  (check) => `
-                <div class="check-item">
-                  <span class="checkbox ${check.yes ? "checked" : ""}"></span>
-                  <span>${check.label || "Unnamed check"}</span>
-                </div>
-              `
-                )
-                .join("")}
-            </div>
-          `
-              : ""
-          }
-        </body>
-        </html>
-      `);
+              </div>
+            `
+              )
+              .join("")}
+          </div>
+        `
+            : ""
+        }
+        
+        ${
+          checklistDetail.closingChecks?.length > 0
+            ? `
+          <div class="section">
+            <h3>Closing Checks</h3>
+            ${checklistDetail.closingChecks
+              .map(
+                (check) => `
+              <div class="check-item">
+                <span class="checkbox ${check.yes ? "checked" : ""}"></span>
+                <span>${check.label || "Unnamed check"}</span>
+              </div>
+            `
+              )
+              .join("")}
+            ${
+              checklistDetail.closingComment
+                ? `<div class="comment-box"><strong>Comment:</strong> ${checklistDetail.closingComment}</div>`
+                : ""
+            }
+          </div>
+        `
+            : ""
+        }
+      </body>
+      </html>
+    `);
 
       printWindow.document.close();
       setTimeout(() => {
@@ -837,6 +900,14 @@ export default function Reports() {
                             />
                           ))}
                         </div>
+                        {checklistDetail.openingComment && (
+                          <div className="mt-4 bg-amber-50 p-4 rounded-lg border-l-4 border-amber-500">
+                            <p className="text-sm text-amber-900">
+                              <span className="font-semibold">Comment: </span>
+                              {checklistDetail.openingComment}
+                            </p>
+                          </div>
+                        )}
                       </Section>
                     )}
 
@@ -852,7 +923,7 @@ export default function Reports() {
                               key={i}
                               className="bg-linear-to-r from-rose-50 to-amber-50 p-4 rounded-lg border border-rose-200"
                             >
-                              <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+                              <div className="flex flex-col sm:flex-row sm:items-center gap-3 mb-3">
                                 <Badge variant="default">
                                   {temp.time} Reading
                                 </Badge>
@@ -863,7 +934,7 @@ export default function Reports() {
                                         key={j}
                                         className="bg-white px-3 py-1.5 rounded-lg font-semibold text-sm border-2 border-rose-200 shadow-sm"
                                       >
-                                        Fridge {j + 1}: {reading}°C
+                                        Fridge {j + 1}: {reading || "N/A"}°C
                                       </span>
                                     ))
                                   ) : (
@@ -873,6 +944,16 @@ export default function Reports() {
                                   )}
                                 </div>
                               </div>
+                              {checklistDetail.fridgeComments?.[temp.time] && (
+                                <div className="mt-3 bg-amber-50 p-3 rounded-lg border-l-4 border-amber-500">
+                                  <p className="text-sm text-amber-900">
+                                    <span className="font-semibold">
+                                      Comment:{" "}
+                                    </span>
+                                    {checklistDetail.fridgeComments[temp.time]}
+                                  </p>
+                                </div>
+                              )}
                             </div>
                           ))}
                         </div>
@@ -1016,6 +1097,32 @@ export default function Reports() {
                       </Section>
                     )}
 
+                    {/* Cooked Dish Serving Temperature */}
+                    {checklistDetail.servedRows?.length > 0 && (
+                      <Section
+                        title="Cooked Dish Serving Temperature"
+                        icon={FileText}
+                      >
+                        <DataTable
+                          headers={["Dish Name", "Lunch Temp", "Dinner Temp"]}
+                          data={checklistDetail.servedRows}
+                          renderRow={(row, i) => (
+                            <>
+                              <td className="px-4 py-3 text-sm text-gray-700">
+                                {row.dish || "-"}
+                              </td>
+                              <td className="px-4 py-3 text-sm text-gray-700">
+                                {row.lunch || "-"}
+                              </td>
+                              <td className="px-4 py-3 text-sm text-gray-700">
+                                {row.dinner || "-"}
+                              </td>
+                            </>
+                          )}
+                        />
+                      </Section>
+                    )}
+
                     {/* Wastage Report */}
                     {checklistDetail.wastageReport?.length > 0 && (
                       <Section title="Wastage Report" icon={FileText}>
@@ -1118,15 +1225,25 @@ export default function Reports() {
                             />
                           ))}
                         </div>
+                        {checklistDetail.closingComment && (
+                          <div className="mt-4 bg-amber-50 p-4 rounded-lg border-l-4 border-amber-500">
+                            <p className="text-sm text-amber-900">
+                              <span className="font-semibold">Comment: </span>
+                              {checklistDetail.closingComment}
+                            </p>
+                          </div>
+                        )}
                       </Section>
                     )}
 
+                    {/* Empty State */}
                     {/* Empty State */}
                     {!checklistDetail.openingChecks?.length &&
                       !checklistDetail.fridgeTemps?.length &&
                       !checklistDetail.deliveryDetails?.length &&
                       !checklistDetail.cookingDetails?.length &&
                       !checklistDetail.dishwasherChecks?.length &&
+                      !checklistDetail.servedRows?.length &&
                       !checklistDetail.wastageReport?.length &&
                       !checklistDetail.incidentReport?.length &&
                       !checklistDetail.closingChecks?.length && (
