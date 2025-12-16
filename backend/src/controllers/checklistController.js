@@ -201,7 +201,6 @@ export const getChecklistByDate = async (req, res, next) => {
 
     const report = await Checklist.findOne({
       date,
-      createdBy: req.user.id,
     }).populate("createdBy", "name email");
 
     if (!report) {
