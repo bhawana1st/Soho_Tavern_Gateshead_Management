@@ -16,16 +16,17 @@ export const saveChecklist = async (req, res, next) => {
     }
 
     // Check if checklist already exists for this date and user
-    const filter = { 
+    const filter = {
       date: payload.date,
-      createdBy: req.user.id 
+      createdBy: req.user.id,
     };
-    
+
     const existingDoc = await Checklist.findOne(filter);
-    
+
     if (existingDoc) {
       return res.status(400).json({
-        message: "Checklist already exists for this date. Please delete it first if you want to create a new one.",
+        message:
+          "Checklist already exists for this date. Please delete it first if you want to create a new one.",
         checklist: existingDoc,
       });
     }
@@ -44,16 +45,16 @@ export const saveChecklist = async (req, res, next) => {
 
     // Ensure all boolean fields are properly set
     if (payload.openingChecks) {
-      payload.openingChecks = payload.openingChecks.map(check => ({
+      payload.openingChecks = payload.openingChecks.map((check) => ({
         ...check,
-        yes: Boolean(check.yes)
+        yes: Boolean(check.yes),
       }));
     }
 
     if (payload.closingChecks) {
-      payload.closingChecks = payload.closingChecks.map(check => ({
+      payload.closingChecks = payload.closingChecks.map((check) => ({
         ...check,
-        yes: Boolean(check.yes)
+        yes: Boolean(check.yes),
       }));
     }
 
@@ -62,12 +63,12 @@ export const saveChecklist = async (req, res, next) => {
 
     // Create new checklist
     const newDoc = await Checklist.create(payload);
-    
+
     console.log("Created checklist:", newDoc._id);
 
-    return res.status(201).json({ 
-      message: "Checklist created successfully", 
-      checklist: newDoc 
+    return res.status(201).json({
+      message: "Checklist created successfully",
+      checklist: newDoc,
     });
   } catch (err) {
     console.error("Error saving checklist:", err);
@@ -107,31 +108,31 @@ export const updateChecklist = async (req, res, next) => {
 
     // Ensure all boolean fields are properly set
     if (payload.openingChecks) {
-      payload.openingChecks = payload.openingChecks.map(check => ({
+      payload.openingChecks = payload.openingChecks.map((check) => ({
         ...check,
-        yes: Boolean(check.yes)
+        yes: Boolean(check.yes),
       }));
     }
 
     if (payload.closingChecks) {
-      payload.closingChecks = payload.closingChecks.map(check => ({
+      payload.closingChecks = payload.closingChecks.map((check) => ({
         ...check,
-        yes: Boolean(check.yes)
+        yes: Boolean(check.yes),
       }));
     }
 
     // Update fields
-    Object.keys(payload).forEach(key => {
-      if (key !== '_id' && key !== 'createdBy' && key !== 'createdAt') {
+    Object.keys(payload).forEach((key) => {
+      if (key !== "_id" && key !== "createdBy" && key !== "createdAt") {
         checklist[key] = payload[key];
       }
     });
 
     await checklist.save();
 
-    return res.status(200).json({ 
-      message: "Checklist updated successfully", 
-      checklist 
+    return res.status(200).json({
+      message: "Checklist updated successfully",
+      checklist,
     });
   } catch (err) {
     console.error("Error updating checklist:", err);
@@ -168,10 +169,10 @@ export const deleteChecklist = async (req, res, next) => {
 // Get all checklists for logged-in user (sorted newest first)
 export const getAllChecklists = async (req, res, next) => {
   try {
-    const reports = await Checklist.find({ createdBy: req.user.id })
+    const reports = await Checklist.find({})
       .populate("createdBy", "name email")
       .sort({ date: -1 });
-    
+
     res.json(reports);
   } catch (err) {
     console.error("Error fetching checklists:", err);
@@ -185,7 +186,7 @@ export const getAllChecklistsAdmin = async (req, res, next) => {
     const reports = await Checklist.find()
       .populate("createdBy", "name email")
       .sort({ date: -1 });
-    
+
     res.json(reports);
   } catch (err) {
     console.error("Error fetching all checklists:", err);
@@ -197,16 +198,16 @@ export const getAllChecklistsAdmin = async (req, res, next) => {
 export const getChecklistByDate = async (req, res, next) => {
   try {
     const { date } = req.params;
-    
-    const report = await Checklist.findOne({ 
+
+    const report = await Checklist.findOne({
       date,
-      createdBy: req.user.id 
+      createdBy: req.user.id,
     }).populate("createdBy", "name email");
-    
+
     if (!report) {
       return res.status(404).json({ message: "Checklist not found" });
     }
-    
+
     res.json(report);
   } catch (err) {
     console.error("Error fetching checklist by date:", err);
@@ -218,16 +219,16 @@ export const getChecklistByDate = async (req, res, next) => {
 export const getChecklistById = async (req, res, next) => {
   try {
     const { id } = req.params;
-    
+
     const report = await Checklist.findOne({
       _id: id,
-      createdBy: req.user.id
+      createdBy: req.user.id,
     }).populate("createdBy", "name email");
-    
+
     if (!report) {
       return res.status(404).json({ message: "Checklist not found" });
     }
-    
+
     res.json(report);
   } catch (err) {
     console.error("Error fetching checklist by ID:", err);
