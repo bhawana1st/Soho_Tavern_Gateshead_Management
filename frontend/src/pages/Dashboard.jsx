@@ -85,6 +85,7 @@ export default function Dashboard() {
             </p>
             <p className="text-sm sm:text-base italic text-gray-600">
               {new Date().toLocaleDateString("en-GB", {
+                timeZone: "Europe/London",
                 weekday: "long",
                 year: "numeric",
                 month: "long",
@@ -110,6 +111,7 @@ export default function Dashboard() {
             <div className="bg-amber-50/95 backdrop-blur-md p-4 sm:p-6 rounded-xl shadow-lg text-center">
               <div className="text-2xl sm:text-3xl font-bold text-amber-900 mb-1">
                 {new Date().toLocaleTimeString("en-GB", {
+                  timeZone: "Europe/London",
                   hour: "2-digit",
                   minute: "2-digit",
                 })}
@@ -124,7 +126,10 @@ export default function Dashboard() {
                 {new Date().getDate()}
               </div>
               <div className="text-xs sm:text-sm text-rose-700">
-                {new Date().toLocaleDateString("en-GB", { month: "long" })}
+                {new Date().toLocaleDateString("en-GB", {
+                  month: "long",
+                  timeZone: "Europe/London",
+                })}
               </div>
             </div>
 
