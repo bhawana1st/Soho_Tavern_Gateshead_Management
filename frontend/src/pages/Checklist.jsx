@@ -194,64 +194,66 @@ const CookedDishSection = ({ rows, onAddRow, onRemoveRow, onUpdateRow }) => (
 
     {/* Desktop Table View */}
     <div className="hidden md:block overflow-x-auto">
-      <table className="min-w-full divide-y divide-rose-200">
-        <thead>
-          <tr>
-            <th className="px-4 py-3 text-left text-xs font-semibold text-rose-900 uppercase">
-              Dish name
-            </th>
-            <th className="px-4 py-3 text-left text-xs font-semibold text-rose-900 uppercase">
-              Lunch
-            </th>
-            <th className="px-4 py-3 text-left text-xs font-semibold text-rose-900 uppercase">
-              Dinner
-            </th>
-            <th className="px-4 py-3 text-left text-xs font-semibold text-rose-900 uppercase">
-              Actions
-            </th>
-          </tr>
-        </thead>
-
-        <tbody className="bg-white divide-y divide-rose-100">
-          {rows.map((r, i) => (
-            <tr key={i} className="hover:bg-rose-50/30 transition">
-              <td className="px-4 py-3">
-                <input
-                  value={r.dish}
-                  onChange={(e) => onUpdateRow(i, "dish", e.target.value)}
-                  className="w-full border border-rose-200 px-2 py-1 rounded focus:outline-none focus:ring-2 focus:ring-rose-300"
-                  placeholder={`Dish ${i + 1}`}
-                />
-              </td>
-              <td className="px-4 py-3">
-                <input
-                  value={r.lunch}
-                  onChange={(e) => onUpdateRow(i, "lunch", e.target.value)}
-                  className="w-full border border-rose-200 px-2 py-1 rounded focus:outline-none focus:ring-2 focus:ring-rose-300"
-                  placeholder="e.g. +65 or -2"
-                />
-              </td>
-              <td className="px-4 py-3">
-                <input
-                  value={r.dinner}
-                  onChange={(e) => onUpdateRow(i, "dinner", e.target.value)}
-                  className="w-full border border-rose-200 px-2 py-1 rounded focus:outline-none focus:ring-2 focus:ring-rose-300"
-                  placeholder="e.g. +70"
-                />
-              </td>
-              <td className="px-4 py-3">
-                <button
-                  onClick={() => onRemoveRow(i)}
-                  className="text-red-600 hover:text-red-800 transition p-1"
-                  title="Delete row"
-                >
-                  <Trash2 className="w-4 h-4" />
-                </button>
-              </td>
+      {rows.length > 0 && (
+        <table className="min-w-full divide-y divide-rose-200">
+          <thead>
+            <tr>
+              <th className="px-4 py-3 text-left text-xs font-semibold text-rose-900 uppercase">
+                Dish name
+              </th>
+              <th className="px-4 py-3 text-left text-xs font-semibold text-rose-900 uppercase">
+                Time
+              </th>
+              <th className="px-4 py-3 text-left text-xs font-semibold text-rose-900 uppercase">
+                Temperature
+              </th>
+              <th className="px-4 py-3 text-left text-xs font-semibold text-rose-900 uppercase">
+                Actions
+              </th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+
+          <tbody className="bg-white divide-y divide-rose-100">
+            {rows.map((r, i) => (
+              <tr key={i} className="hover:bg-rose-50/30 transition">
+                <td className="px-4 py-3">
+                  <input
+                    value={r.dish}
+                    onChange={(e) => onUpdateRow(i, "dish", e.target.value)}
+                    className="w-full border border-rose-200 px-2 py-1 rounded focus:outline-none focus:ring-2 focus:ring-rose-300"
+                    placeholder={`Dish ${i + 1}`}
+                  />
+                </td>
+                <td className="px-4 py-3">
+                  <input
+                    value={r.lunch}
+                    onChange={(e) => onUpdateRow(i, "lunch", e.target.value)}
+                    className="w-full border border-rose-200 px-2 py-1 rounded focus:outline-none focus:ring-2 focus:ring-rose-300"
+                    type="time"
+                  />
+                </td>
+                <td className="px-4 py-3">
+                  <input
+                    value={r.dinner}
+                    onChange={(e) => onUpdateRow(i, "dinner", e.target.value)}
+                    className="w-full border border-rose-200 px-2 py-1 rounded focus:outline-none focus:ring-2 focus:ring-rose-300"
+                    placeholder="eg. 5° or 7°"
+                  />
+                </td>
+                <td className="px-4 py-3">
+                  <button
+                    onClick={() => onRemoveRow(i)}
+                    className="text-red-600 hover:text-red-800 transition p-1"
+                    title="Delete row"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
     </div>
 
     {/* Mobile Card View */}
@@ -314,12 +316,6 @@ const CookedDishSection = ({ rows, onAddRow, onRemoveRow, onUpdateRow }) => (
         </div>
       ))}
     </div>
-
-    {rows.length === 0 && (
-      <div className="text-center py-8 text-rose-400">
-        No dishes added yet. Click "Add Row" to get started.
-      </div>
-    )}
   </Card>
 );
 
@@ -613,10 +609,7 @@ export default function Checklist() {
     fridgeComments: { AM: "", PM: "" },
     deliveryDetails: [],
     cookingDetails: [],
-    servedRows: [
-      { dish: "", lunch: "", dinner: "" },
-      { dish: "", lunch: "", dinner: "" },
-    ],
+    servedRows: [],
     wastageReport: [],
     incidentReport: [],
     closingChecks: [
@@ -945,7 +938,7 @@ export default function Checklist() {
     setChecklist((prev) => ({ ...prev, closingComment: value }));
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-rose-50 pt-24 sm:pt-28 px-3 sm:px-4">
+    <div className="min-h-screen bg-linear-to-br from-amber-50 via-orange-50 to-rose-50 pt-24 sm:pt-28 px-3 sm:px-4">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <Card className="p-4 sm:p-6 mb-4 sm:mb-6">
