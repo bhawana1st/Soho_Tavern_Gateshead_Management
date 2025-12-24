@@ -530,8 +530,8 @@ export default function Reports() {
               <thead>
                 <tr>
                   <th>Dish Name</th>
-                  <th>Lunch Temp</th>
-                  <th>Dinner Temp</th>
+                  <th>Time</th>
+                  <th>Temperature</th>
                 </tr>
               </thead>
               <tbody>
@@ -1104,7 +1104,7 @@ export default function Reports() {
                         icon={FileText}
                       >
                         <DataTable
-                          headers={["Dish Name", "Lunch Temp", "Dinner Temp"]}
+                          headers={["Dish Name", "Time", "Temperature"]}
                           data={checklistDetail.servedRows}
                           renderRow={(row, i) => (
                             <>
