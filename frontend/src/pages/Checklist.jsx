@@ -1138,6 +1138,18 @@ export default function Checklist() {
           />
         </Card>
 
+        {message && (
+          <div
+            className={`text-center p-3 sm:p-4 mb-4 rounded-lg text-sm sm:text-base ${
+              message.includes("✅")
+                ? "bg-green-100 text-green-800"
+                : "bg-red-100 text-red-800"
+            }`}
+          >
+            {message}
+          </div>
+        )}
+
         <div className="flex justify-center mb-6 sm:mb-8">
           <button
             onClick={handleSave}
@@ -1148,18 +1160,6 @@ export default function Checklist() {
             <span>{loading ? "Saving..." : "Save Checklist"}</span>
           </button>
         </div>
-
-        {message && (
-          <div
-            className={`text-center p-3 sm:p-4 rounded-lg text-sm sm:text-base ${
-              message.includes("✅")
-                ? "bg-green-100 text-green-800"
-                : "bg-red-100 text-red-800"
-            }`}
-          >
-            {message}
-          </div>
-        )}
       </div>
     </div>
   );

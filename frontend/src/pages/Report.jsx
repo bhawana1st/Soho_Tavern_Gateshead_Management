@@ -130,6 +130,7 @@ const InfoCard = ({ label, value, icon: Icon }) => (
 export default function Reports() {
   const [checklists, setChecklists] = useState([]);
   const [selectedDate, setSelectedDate] = useState("");
+  const [selectedCreatedBy, setSelectedCreatedBy] = useState("");
   const [checklistDetail, setChecklistDetail] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -154,10 +155,12 @@ export default function Reports() {
     }
   };
 
-  const fetchChecklistByDate = async (date) => {
+  const fetchChecklistByDate = async (date, createdBy) => {
     try {
       setLoading(true);
-      const { data } = await API.get(`/checklist/${date}`);
+      const { data } = await API.get(
+        `/checklist/${date}?createdBy=${createdBy}`
+      );
       setChecklistDetail(data);
       setError("");
     } catch (err) {
@@ -170,9 +173,12 @@ export default function Reports() {
     }
   };
 
-  const handleDateSelect = (date) => {
-    setSelectedDate(date);
-    fetchChecklistByDate(date);
+  const handleDateSelect = (item) => {
+    console.log(item);
+
+    setSelectedDate(item.date);
+    setSelectedCreatedBy(item.createdBy._id);
+    fetchChecklistByDate(item.date, item.createdBy._id);
   };
 
   const handleDelete = async () => {
@@ -191,6 +197,7 @@ export default function Reports() {
       );
       setChecklistDetail(null);
       setSelectedDate("");
+      selectedCreatedBy("");
     } catch (err) {
       alert(err.response?.data?.message || "Failed to delete checklist");
     }
@@ -733,9 +740,10 @@ export default function Reports() {
                   filteredChecklists.map((item) => (
                     <button
                       key={item._id}
-                      onClick={() => handleDateSelect(item.date)}
+                      onClick={() => handleDateSelect(item)}
                       className={`w-full text-left p-3 sm:p-4 rounded-lg transition-all transform hover:scale-[1.02] ${
-                        selectedDate === item.date
+                        selectedDate === item.date &&
+                        selectedCreatedBy == item.createdBy._id
                           ? "bg-linear-to-r from-rose-900 to-rose-700 text-white shadow-lg"
                           : "bg-white hover:bg-rose-50 border border-rose-100"
                       }`}
@@ -745,7 +753,8 @@ export default function Reports() {
                           <div className="flex items-center gap-2 mb-1">
                             <Calendar
                               className={`h-4 w-4 shrink-0 ${
-                                selectedDate === item.date
+                                selectedDate === item.date &&
+                                selectedCreatedBy == item.createdBy._id
                                   ? "text-white"
                                   : "text-rose-600"
                               }`}
@@ -762,14 +771,16 @@ export default function Reports() {
                           <div className="flex items-center gap-2">
                             <User
                               className={`h-3 w-3 shrink-0 ${
-                                selectedDate === item.date
+                                selectedDate === item.date &&
+                                selectedCreatedBy == item.createdBy._id
                                   ? "text-white/80"
                                   : "text-gray-400"
                               }`}
                             />
                             <span
                               className={`text-xs truncate ${
-                                selectedDate === item.date
+                                selectedDate === item.date &&
+                                selectedCreatedBy == item.createdBy._id
                                   ? "text-white/90"
                                   : "text-gray-600"
                               }`}

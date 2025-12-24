@@ -198,9 +198,11 @@ export const getAllChecklistsAdmin = async (req, res, next) => {
 export const getChecklistByDate = async (req, res, next) => {
   try {
     const { date } = req.params;
+    const { createdBy } = req.query;
 
     const report = await Checklist.findOne({
       date,
+      createdBy,
     }).populate("createdBy", "name email");
 
     if (!report) {
