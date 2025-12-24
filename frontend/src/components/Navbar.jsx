@@ -1,10 +1,11 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
 import logo from "../assets/logo.svg";
 
 export default function Navbar() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const user = (() => {
@@ -43,30 +44,55 @@ export default function Navbar() {
         <div className="hidden md:flex items-center gap-4 text-sm font-medium">
           {user ? (
             <>
-              <Link to="/dashboard" className="hover:text-burgundy transition">
+              <Link
+                to="/dashboard"
+                className={
+                  location.pathname === "/dashboard"
+                    ? "bg-burgundy text-white px-3 py-1 rounded-md hover:bg-burgundy/90 transition"
+                    : "hover:text-burgundy transition"
+                }
+              >
                 Dashboard
               </Link>
               {user.role !== "viewer" && user.role !== "admin" && (
                 <Link
                   to="/checklist"
-                  className="hover:text-burgundy transition"
+                  className={
+                    location.pathname === "/checklist"
+                      ? "bg-burgundy text-white px-3 py-1 rounded-md hover:bg-burgundy/90 transition"
+                      : "hover:text-burgundy transition"
+                  }
                 >
                   Checklist
                 </Link>
               )}
               {user.role !== "admin" && (
-                <Link to="/reports" className="hover:text-burgundy transition">
+                <Link
+                  to="/reports"
+                  className={
+                    location.pathname === "/reports"
+                      ? "bg-burgundy text-white px-3 py-1 rounded-md hover:bg-burgundy/90 transition"
+                      : "hover:text-burgundy transition"
+                  }
+                >
                   Reports
                 </Link>
               )}
               {user.role === "admin" && (
-                <Link to="/users" className="hover:text-burgundy transition">
+                <Link
+                  to="/users"
+                  className={
+                    location.pathname === "/users"
+                      ? "bg-burgundy text-white px-3 py-1 rounded-md hover:bg-burgundy/90 transition"
+                      : "hover:text-burgundy transition"
+                  }
+                >
                   Users
                 </Link>
               )}
               <button
                 onClick={logout}
-                className="bg-burgundy text-white px-3 py-1 rounded-md hover:bg-burgundy/90 transition"
+                className="hover:text-burgundy transition"
               >
                 Logout
               </button>
@@ -97,7 +123,11 @@ export default function Navbar() {
             <Link
               to="/dashboard"
               onClick={closeMenu}
-              className="block px-4 py-2 hover:bg-burgundy/10 rounded-lg transition text-sm font-medium"
+              className={
+                location.pathname === "/dashboard"
+                  ? "block px-4 py-2 bg-burgundy text-white rounded-lg hover:bg-burgundy/90 transition text-sm font-medium"
+                  : "block px-4 py-2 hover:bg-burgundy/10 rounded-lg transition text-sm font-medium"
+              }
             >
               Dashboard
             </Link>
@@ -105,7 +135,11 @@ export default function Navbar() {
               <Link
                 to="/checklist"
                 onClick={closeMenu}
-                className="block px-4 py-2 hover:bg-burgundy/10 rounded-lg transition text-sm font-medium"
+                className={
+                  location.pathname === "/checklist"
+                    ? "block px-4 py-2 bg-burgundy text-white rounded-lg hover:bg-burgundy/90 transition text-sm font-medium"
+                    : "block px-4 py-2 hover:bg-burgundy/10 rounded-lg transition text-sm font-medium"
+                }
               >
                 Checklist
               </Link>
@@ -114,7 +148,11 @@ export default function Navbar() {
               <Link
                 to="/reports"
                 onClick={closeMenu}
-                className="block px-4 py-2 hover:bg-burgundy/10 rounded-lg transition text-sm font-medium"
+                className={
+                  location.pathname === "/reports"
+                    ? "block px-4 py-2 bg-burgundy text-white rounded-lg hover:bg-burgundy/90 transition text-sm font-medium"
+                    : "block px-4 py-2 hover:bg-burgundy/10 rounded-lg transition text-sm font-medium"
+                }
               >
                 Reports
               </Link>
@@ -123,14 +161,18 @@ export default function Navbar() {
               <Link
                 to="/users"
                 onClick={closeMenu}
-                className="block px-4 py-2 hover:bg-burgundy/10 rounded-lg transition text-sm font-medium"
+                className={
+                  location.pathname === "/users"
+                    ? "block px-4 py-2 bg-burgundy text-white rounded-lg hover:bg-burgundy/90 transition text-sm font-medium"
+                    : "block px-4 py-2 hover:bg-burgundy/10 rounded-lg transition text-sm font-medium"
+                }
               >
                 Users
               </Link>
             )}
             <button
               onClick={logout}
-              className="w-full text-left px-4 py-2 bg-burgundy text-white rounded-lg hover:bg-burgundy/90 transition text-sm font-medium"
+              className="w-full text-left px-4 py-2 hover:bg-burgundy/10 rounded-lg transition text-sm font-medium"
             >
               Logout
             </button>
