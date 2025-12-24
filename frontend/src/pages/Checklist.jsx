@@ -291,7 +291,7 @@ const CookedDishSection = ({ rows, onAddRow, onRemoveRow, onUpdateRow }) => (
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label className="block text-xs font-semibold text-rose-900 uppercase mb-1">
-                Lunch
+                Time
               </label>
               <input
                 value={r.lunch}
@@ -303,7 +303,7 @@ const CookedDishSection = ({ rows, onAddRow, onRemoveRow, onUpdateRow }) => (
 
             <div>
               <label className="block text-xs font-semibold text-rose-900 uppercase mb-1">
-                Dinner
+                Temperature
               </label>
               <input
                 value={r.dinner}
