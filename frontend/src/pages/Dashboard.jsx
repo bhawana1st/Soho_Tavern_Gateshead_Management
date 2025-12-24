@@ -78,7 +78,7 @@ export default function Dashboard() {
           {/* Welcome Section */}
           <div className="bg-white/70 backdrop-blur-md p-6 sm:p-8 md:p-12 rounded-2xl shadow-2xl mb-6 sm:mb-8 text-center">
             <h1 className="text-3xl sm:text-4xl md:text-5xl font-serif mb-3 text-rose-900">
-              Welcome back, {user?.name || "Guest"}!
+              Welcome to Soho Tavern!
             </h1>
             <p className="text-base sm:text-lg text-gray-800 mb-2">
               Soho Tavern Gateshead

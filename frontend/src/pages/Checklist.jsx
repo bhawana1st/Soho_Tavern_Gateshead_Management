@@ -297,7 +297,7 @@ const CookedDishSection = ({ rows, onAddRow, onRemoveRow, onUpdateRow }) => (
                 value={r.lunch}
                 onChange={(e) => onUpdateRow(i, "lunch", e.target.value)}
                 className="w-full border border-rose-200 px-3 py-2 rounded focus:outline-none focus:ring-2 focus:ring-rose-300"
-                placeholder="e.g. +65"
+                type="time"
               />
             </div>
 
@@ -309,7 +309,7 @@ const CookedDishSection = ({ rows, onAddRow, onRemoveRow, onUpdateRow }) => (
                 value={r.dinner}
                 onChange={(e) => onUpdateRow(i, "dinner", e.target.value)}
                 className="w-full border border-rose-200 px-3 py-2 rounded focus:outline-none focus:ring-2 focus:ring-rose-300"
-                placeholder="e.g. +70"
+                placeholder="e.g. 7°"
               />
             </div>
           </div>
