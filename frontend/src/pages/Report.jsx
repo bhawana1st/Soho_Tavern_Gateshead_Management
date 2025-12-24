@@ -663,10 +663,13 @@ export default function Reports() {
     }
   };
 
-  const filteredChecklists = checklists.filter(
-    (item) =>
-      item.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item.date?.includes(searchTerm)
+  const filteredChecklists = checklists.filter((item) =>
+    item.name?.toLowerCase().includes(searchTerm.toLowerCase()) || item.date
+      ? new Date(item.date)
+          .toDateString()
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase())
+      : false
   );
 
   const userRole = JSON.parse(
